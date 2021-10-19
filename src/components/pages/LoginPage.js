@@ -79,7 +79,9 @@ const LoginPage = () => {
       </Form.Item>
       <div>
         <p>Akkauntingiz bolmasa royhatdan oting</p>
+        <div className="login">
         <Link to={'/register'}>Register</Link>
+        </div>
       </div>
     </Form>
     </div>
