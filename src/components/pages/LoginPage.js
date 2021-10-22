@@ -1,12 +1,28 @@
+import React, {useState} from 'react';
 import { Form, Input, Button, Checkbox } from 'antd';
 import {Link,useHistory} from 'react-router-dom';
+import axios from 'axios';
+import ReactLoading from 'react-loading';
+import { connect } from 'react-redux';
+import { setProfile } from '../../store/actions/profile';
 
-const LoginPage = () => {
+const LoginPage = ({setProfile}) => {
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onFinish = (values) => {
-    history.push('/login');
-  };
+  const onFinish = async (values) => {
+    try{
+      setIsLoading(true)
+        const res = await axios.post('https://api-nodejs-todolist.herokuapp.com/user/login', values);
+        localStorage.setItem('token', res.data.token);
+        setProfile(res.data);
+        history.push('/home');
+    }catch (e) {
+
+    }finally{
+      setIsLoading(false);
+    }
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -23,26 +39,23 @@ const LoginPage = () => {
       wrapperCol={{
         span: 16,
       }}
-      initialValues={{
-        remember: true,
-      }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item
-        label="Username"
-        name="username"
+         <Form.Item
+        label="Email"
+        name="email"
         rules={[
           {
-            required: false,
+            type:'email',
+            required: true,
             message: 'Please input your username!',
           },
         ]}
       >
         <Input />
       </Form.Item>
-
       <Form.Item
         label="Password"
         name="password"
@@ -55,18 +68,6 @@ const LoginPage = () => {
       >
         <Input.Password />
       </Form.Item>
-
-      <Form.Item
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{
-          offset: 8,
-          span: 16,
-        }}
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
       <Form.Item
         wrapperCol={{
           offset: 8,
@@ -74,7 +75,9 @@ const LoginPage = () => {
         }}
       >
         <Button type="primary" htmlType="submit">
-          Submit
+          {
+            isLoading ? <ReactLoading width={20} type="spinningBubbles" color={"red"} /> : "Submit"
+          }
         </Button>
       </Form.Item>
       <div>
@@ -88,4 +91,9 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const mapDispatchToProps = {
+  setProfile
+}
+
+
+export default connect(null, mapDispatchToProps)(LoginPage);
