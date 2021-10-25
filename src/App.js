@@ -15,23 +15,25 @@ import ReactLoading from 'react-loading';
 
 
 
-function App() {
+function App({setProfile}) {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(false);
 
     const getUser = async () => {
         try{
+            setIsLoading(true)
             const token =  localStorage.getItem('token');
             if(token){
-                
+                axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+                const res = await axios.get('https://api-nodejs-todolist.herokuapp.com/user/me');
+                setProfile({
+                    user:res.data,
+                    token: token,
+                });
+                history.push('/home');
             }
-            setIsLoading(true)
-              const res = await axios.get('https://api-nodejs-todolist.herokuapp.com/user/user/me');
-              localStorage.setItem('token', res.data.token);
-              setProfile(res.data);
-              history.push('/home');
           }catch (e) {
-      
+
           }finally{
             setIsLoading(false);
           }
@@ -39,6 +41,15 @@ function App() {
     useEffect(() => {
         getUser();
     }, [])
+
+    if (isLoading) {
+        return (
+            <div className="center">
+                <ReactLoading type='spinningBubbles' color="blue" height="10"/>
+
+            </div>
+        )
+    }
     return (
         <>
         <BrowserRouter>
