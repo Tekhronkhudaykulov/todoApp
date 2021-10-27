@@ -6,7 +6,7 @@ import {
     Route,
 } from "react-router-dom";
 import 'antd/dist/antd.css';
-import { LoginPage, RegisterPage } from "./components/pages";
+import { HomePage, LoginPage, RegisterPage } from "./components/pages";
 import {Link,useHistory} from 'react-router-dom';
 import { setProfile } from "./store/actions/profile";
 import { connect } from "react-redux";
@@ -56,6 +56,8 @@ function App({setProfile}) {
                 <Switch>
                     <Route path="/" component={LoginPage} exact/>
                     <Route path="/register" component={RegisterPage} exact/>
+                    <Route path="/home" component={HomePage} exact/>
+                    
                 </Switch>
             </BrowserRouter>
         </>
