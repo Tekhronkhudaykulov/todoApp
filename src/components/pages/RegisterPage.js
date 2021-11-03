@@ -16,6 +16,7 @@ const RegisterPage = ({setProfile}) => {
       setIsLoading(true)
         const res = await axios.post('https://api-nodejs-todolist.herokuapp.com/user/register', values);
         localStorage.setItem('token', res.data.token);
+        axios.defaults.headers['Authorization'] = `Bearer ${res.data.token}`
         setProfile(res.data);
         history.push('/home');
     }catch (e) {

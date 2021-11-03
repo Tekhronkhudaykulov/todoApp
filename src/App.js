@@ -17,7 +17,7 @@ import ReactLoading from 'react-loading';
 
 function App({setProfile}) {
     const history = useHistory();     
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
         /// asdsfs  
     const getUser = async () => {
         try{
